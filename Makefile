@@ -7,5 +7,6 @@ debug: *.cpp includes/*.hpp
 release: *.cpp includes/*.hpp
 	g++ *.cpp -std=c++17 -Wall -Wextra -Wpedantic -Werror -O3 -o release -Iincludes
 
-clean: debug release
+.PHONY: clean
+clean:
 	rm debug release
