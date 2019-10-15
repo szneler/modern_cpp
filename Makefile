@@ -1,12 +1,26 @@
+CXX=g++
+CXXFLAGS=-std=c++17 -Wall -Wextra -Wpedantic -Werror
+SOURCES=Shape.cpp Circle.cpp Rectangle.cpp Square.cpp
+OBJECTS=$(SOURCES:.cpp=.o)
+INCLUDES=includes/*.hpp
+INCLUDE_DIRS=-Iincludes
+ALL_TARGETS=debug release
+
 .PHONY: all
-all: debug release
+all: $(ALL_TARGETS)
 
-debug: *.cpp includes/*.hpp
-	g++ *.cpp -std=c++17 -Wall -Wextra -Wpedantic -Werror -g -o debug -Iincludes
+main.o: main.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-release: *.cpp includes/*.hpp
-	g++ *.cpp -std=c++17 -Wall -Wextra -Wpedantic -Werror -O3 -o release -Iincludes
+%.o: %.cpp includes/%.hpp
+	$(CXX) $(CXXFLAGS) $(INCLUDE_DIRS) -c $< -o $@
+
+debug: main.o $(OBJECTS)
+	$(CXX) $^ -g -o $@
+
+release: main.o $(OBJECTS)
+	$(CXX) $^ -O3 -o $@
 
 .PHONY: clean
 clean:
-	rm debug release
+	rm $(ALL_TARGETS) $(OBJECTS)
